@@ -16,14 +16,14 @@
 const char *ssid = WIFI_SSID;
 const char *password = WIFI_PASS;
 
-String ServerAddress = SERVER_ADDRESS; // Адрес сервера
-String key = SERVER_KEY;               // Ключ для доступа к серверу
+String ServerAddress = SERVER_ADDRESS; // Server address
+String key = SERVER_KEY;               // Server access key
 String StationID = STATION_ID;
 String sensor = SENSOR_ID;
 
-String idAdmin1 = ADMIN_CHAT_ID; // ID чата, в который бот пишет лог и слушает команды
+String idAdmin1 = ADMIN_CHAT_ID; // Chat ID where the bot writes logs and listens for commands
 FastBot bot(BOT_TOKEN);
-#define TelegramDdosTimeout 5000 // таймаут
+#define TelegramDdosTimeout 5000 // timeout
 // unsigned long bot_lasttime; // last time messages' scan has been done
 bool Start = false;
 const unsigned long BOT_MTBS = 3600; // mean time between scan messages
@@ -31,9 +31,9 @@ const unsigned long BOT_MTBS = 3600; // mean time between scan messages
 WiFiClient wclient;
 
 HTTPClient http; // Create Object of HTTPClient
-int httpCode;    // код ответа сервера
-String payload;  // строка ответ сервера
-String error;    // расшифровка кода ошибки
+int httpCode;    // server response code
+String payload;  // server response string
+String error;    // error code description
 
 int rssi = 0;
 int rssi1 = -99;
@@ -128,15 +128,15 @@ void loop()
   // Read input value (e.g., sensor data)
   inputValue = analogRead(A0) * 1;
 
-  for (int i = avg - 1; i > 0; i--) // сдвиг данных в буфере
+  for (int i = avg - 1; i > 0; i--) // shift data in buffer
   {
     data[i] = data[i - 1];
   }
 
-  data[0] = (int)inputValue; // последнее измеренное значение в первую ячейку массива
+  data[0] = (int)inputValue; // put last measured value in first array cell
 
   Summ = 0;
-  for (int i = 0; i < avg; i++) // считаем сумму всех значений в буфере
+  for (int i = 0; i < avg; i++) // calculate sum of all values in buffer
   {
     Summ += data[i];
   }
@@ -212,7 +212,7 @@ void loop()
     }
   }
 
-  if (gasLevel >= 4 * 1024 / NUM_LEDS) // Тревога
+  if (gasLevel >= 4 * 1024 / NUM_LEDS) // Alarm
   {
     Alarm = true;
     if (triger_Alarm == false)
@@ -346,7 +346,7 @@ void loop()
     counterTimerLongPress = 0;
   }
 
-  if (StartTimer) // Таймер запущен
+  if (StartTimer) // Timer is running
   {
     TimeTotal2 = millis();
 
@@ -354,7 +354,7 @@ void loop()
 
     timer_sec = timer_5min - TimeTotal;
 
-    if (gasLevel <= 2 * (1024 / NUM_LEDS)) // отображение шкалы таймера, если уровень газа нормальный
+    if (gasLevel <= 2 * (1024 / NUM_LEDS)) // display timer scale if gas level is normal
     {
       for (int ii = 0; ii <= timer_sec / 60 / 5; ii++) // Timer_5min
       {
@@ -447,7 +447,7 @@ void loop()
   //   Serial.print(TimeTotal2 - TimeTotal1);
   // #endif
 
-  if (TimeToSend >= 60) // отправляем данные на сервер 1 раз в минуту
+  if (TimeToSend >= 60) // send data to server once per minute
   {
     SendToServer();
     TimeToSend1 = millis() / 1000;
@@ -677,29 +677,29 @@ void SendToServer(void)
   // wclient.stop(); // отключение от WiFi
 }
 
-void OffLEDBLUE(void) // Выключить светодиод LED1 COM
+void OffLEDBLUE(void) // Turn off LED1 COM
 {                     // turn the LED off (HIGH is the voltage level)
   digitalWrite(LED_BUILTIN, HIGH);
-} // запись 1 в порт синего светодиода
-void OnLEDBLUE(void) // Включить светодиод LED1
+} // write 1 to blue LED port
+void OnLEDBLUE(void) // Turn on LED1
 {                    // turn the LED on by making the voltage LOW
   digitalWrite(LED_BUILTIN, LOW);
 } // запись 0 в порт синего светодиода
 
-void OffLEDBLUE2(void) // Выключить светодиод LED2 WAKE
+void OffLEDBLUE2(void) // Turn off LED2 WAKE
 {                      // turn the LED off (HIGH is the voltage level)
   digitalWrite(LED_BUILTIN_AUX, HIGH);
-} // запись 1 в порт синего светодиода
-void OnLEDBLUE2(void) // Включить светодиод LED2
+} // write 1 to blue LED port
+void OnLEDBLUE2(void) // Turn on LED2
 {                     // turn the LED on by making the voltage LOW
   digitalWrite(LED_BUILTIN_AUX, LOW);
 } // запись 0 в порт синего светодиода
 
-void OnBuzzer(void) // Выключить светодиод LED1 COM
-{                   // turn the LED off (HIGH is the voltage level)
+void OnBuzzer(void) // Turn on buzzer
+{                   // turn the buzzer on (HIGH is the voltage level)
   digitalWrite(Buzzer, HIGH);
-} // запись 1 в порт синего светодиода
-void OffBuzzer(void) // Включить светодиод LED1
+} // write 1 to buzzer port
+void OffBuzzer(void) // Turn off buzzer
 {                    // turn the LED on by making the voltage LOW
   digitalWrite(Buzzer, LOW);
 } // запись 0 в порт синего светодиода
